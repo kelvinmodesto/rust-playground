@@ -7,6 +7,8 @@ impl Deck {
     fn new() -> Self {
         Deck { cards: vec![] }
     }
+    fn shuffle(&self) {}
+    fn deal(&self) {}
 }
 
 fn main() {
