@@ -4,7 +4,7 @@ bin = [
 ]
 
 [package]
-name = "CTCI-6th-Edition-Rust"
+name = "rust-playground"
 edition = "2024"
 version = "0.1.0"
 
