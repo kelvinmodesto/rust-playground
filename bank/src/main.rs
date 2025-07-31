@@ -1,3 +1,5 @@
+use std::fmt::format;
+
 #[derive(Debug)]
 struct Account {
     balance: i32,
@@ -13,6 +15,20 @@ impl Account {
             holder,
         }
     }
+
+    fn deposit(&mut self, amount: i32) -> i32 {
+        self.balance += amount;
+        self.balance
+    }
+
+    fn withdraw(&mut self, amount: i32) -> i32 {
+        self.balance -= amount;
+        self.balance
+    }
+
+    fn summary(&self) -> String {
+        format!("{} has a balance {}", self.holder, self.balance)
+    }
 }
 
 #[derive(Debug)]
@@ -24,27 +40,31 @@ impl Bank {
     fn new() -> Self {
         Bank { accounts: vec![] }
     }
-}
 
-fn print_account(account: &Account) {
-    println!("{:#?}", account);
-}
+    fn add_account(&mut self, account: Account) {
+        self.accounts.push(account);
+    }
 
-fn print_holder(holder: String) {
-    println!("{:#?}", holder);
+    fn total_balance(&self) -> i32 {
+        self.accounts.iter().map(|account| account.balance).sum()
+    }
+    fn summary(&self) -> Vec<String> {
+        self.accounts
+            .iter()
+            .map(|account| account.summary())
+            .collect::<Vec<String>>()
+    }
 }
 
 fn main() {
-    // let bank = Bank::new();
-    let account = Account::new(1, String::from("Monkey D. Luffy"));
+    let mut bank = Bank::new();
+    let mut account = Account::new(50, String::from("Monkey D. Luffy"));
 
-    // let other_bank = bank;
+    account.deposit(200);
+    account.withdraw(20);
 
-    // let accounts_list = vec![account];
-    // let accounts = bank.accounts;
+    bank.add_account(account);
 
-    // println!("{:#?}", bank.accounts);
-    print_account(&account);
-
-    println!("{:#?}", account);
+    println!("{:#?}", bank.total_balance());
+    println!("{:#?}", bank.summary());
 }
