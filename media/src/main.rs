@@ -97,5 +97,5 @@ fn main() {
     catalog.add(podcast);
     catalog.add(placeholder);
 
-    prPintln!("{:#?}", catalog.get_by_index(0));
+    println!("{:#?}", catalog.get_by_index(0));
 }
