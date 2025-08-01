@@ -2,26 +2,78 @@
 enum Media {
     Book { title: String, author: String },
     Manga { title: String, author: String },
-    Moovie { title: String, director: String },
+    Movie { title: String, director: String },
     AudioBook { title: String },
+    Podcast(u32),
+    Placeholder,
 }
 
 impl Media {
     fn description(&self) -> String {
-        // match self {}
+        match self {
+            Media::Book { title, author } => {
+                format!("Book: {} {}", title, author)
+            }
+            Media::Manga { title, author } => {
+                format!("Manga: {} {}", title, author)
+            }
+            Media::AudioBook { title } => {
+                format!("AudioBook: {}", title)
+            }
+            Media::Movie { title, director } => {
+                format!("Movie: {} {}", title, director)
+            }
+            Media::Podcast(episode_number) => {
+                format!("Podcast: {}", episode_number)
+            }
+            Media::Placeholder => {
+                format!("Placeholder")
+            }
+        }
     }
 }
 
-fn print_media(media: Media) {
-    println!("{:#?}", media);
+enum MightHaveValue<'a> {
+    ThereIsAValue(&'a Media),
+    NoValueAvailable,
 }
+
+#[derive(Debug)]
+struct Catalog {
+    items: Vec<Media>,
+}
+
+impl Catalog {
+    fn new() -> Self {
+        Catalog { items: vec![] }
+    }
+    fn add(&mut self, media: Media) {
+        self.items.push(media);
+    }
+    fn get_by_index_custom(&self, index: usize) -> MightHaveValue {
+        if self.items.len() > index {
+            return MightHaveValue::ThereIsAValue(&self.items[index]);
+        }
+
+        MightHaveValue::NoValueAvailable
+    }
+
+    fn get_by_index(&self, index: usize) -> Option<&Media> {
+        if self.items.len() > index {
+            return Some(&self.items[index]);
+        }
+
+        None
+    }
+}
+
 fn main() {
     let manga = Media::Manga {
         title: String::from("One Piece"),
         author: String::from("Eichiro Oda"),
     };
 
-    let movie = Media::Moovie {
+    let movie = Media::Movie {
         title: String::from("Matrix"),
         director: String::from("Watchowsky Sisters"),
     };
@@ -34,9 +86,16 @@ fn main() {
     let audio_book = Media::AudioBook {
         title: String::from("1984"),
     };
+    let podcast = Media::Podcast(56);
+    let placeholder = Media::Placeholder;
 
-    manga.description();
-    audio_book.description();
-    book.description();
-    movie.description();
+    let mut catalog = Catalog::new();
+
+    catalog.add(manga);
+    catalog.add(movie);
+    catalog.add(audio_book);
+    catalog.add(podcast);
+    catalog.add(placeholder);
+
+    prPintln!("{:#?}", catalog.get_by_index(0));
 }
